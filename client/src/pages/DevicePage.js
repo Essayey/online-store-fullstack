@@ -1,22 +1,24 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Card, Col, Container, Image, Row } from 'react-bootstrap'
+import { useParams } from 'react-router-dom'
 import star from '../assets/star.png'
+import { fetchOneDevice } from '../http/deviceAPI'
+
 
 const DevicePage = () => {
-    const device = { id: 1, name: 'iPhone 12 pro', price: 109000, rating: 5, img: 'https://static.eldorado.ru/photos/mv/Big/30064946bb.jpg' }
-    const description = [
-        { id: 1, title: 'Title', description: 'Description' },
-        { id: 2, title: 'Title', description: 'Description' },
-        { id: 3, title: 'Title', description: 'Description' },
-        { id: 4, title: 'Title', description: 'Description' },
-        { id: 5, title: 'Title', description: 'Description' },
-    ]
+    const [device, setDevice] = useState({ info: [] })
+    const { id } = useParams();
+
+    useEffect(() => {
+        fetchOneDevice(id).then(data => setDevice(data))
+    }, [])
+    console.log(device.info)
     return (
         <Container className='mt-3'>
 
             <Row>
                 <Col md={4}>
-                    <Image width={300} height={300} src={device.img} />
+                    <Image width={300} height={300} src={process.env.REACT_APP_API_URL + device.img} />
                 </Col>
                 <Col md={4}>
                     <Row>
@@ -44,7 +46,7 @@ const DevicePage = () => {
             </Row>
             <Col md={12} className='mt-3'>
                 <h1>Характеристики</h1>
-                {description.map(info =>
+                {device.info.map(info =>
                     <Row key={info.id} style={Number(info.id) % 2 === 1 ? { background: '#00aa0033' } : {}}>
                         <Col
                             className='p-2'
